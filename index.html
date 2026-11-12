@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>思想档案馆 · 追问</title>
+<style>
+:root{
+  --bg:#11141b; --panel:#181c25; --panel2:#1f2530; --ink:#e7e9ef; --muted:#8b93a5;
+  --accent:#7d9bc9; --accent2:#cbb488; --line:#272d3a; --good:#7fc9a0; --warn:#d3a05a;
+  --radius:14px; --shadow:0 6px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.7; font-size:15px;
+}
+.serif{font-family:Georgia,"Times New Roman","Songti SC","Noto Serif SC",serif}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+a{color:inherit}
+/* topbar */
+.topbar{position:sticky;top:0;z-index:30;background:rgba(17,20,27,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:11px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-family:Georgia,serif;font-weight:700;font-size:17px;letter-spacing:1px;color:var(--accent2)}
+.brand small{display:block;font-family:inherit;font-weight:400;font-size:11px;color:var(--muted);letter-spacing:0}
+.topnav{margin-left:auto;display:flex;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:3px}
+.topnav button{padding:6px 13px;border-radius:99px;font-size:13px;color:var(--muted);font-weight:600}
+.topnav button.active{background:var(--accent);color:#0d1117}
+.content{max-width:900px;margin:0 auto;padding:18px 16px 60px}
+/* cards */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.h1{font-family:Georgia,serif;font-size:22px;margin:0 0 6px;color:var(--accent2)}
+.lead{color:var(--muted);font-size:14px;margin:0 0 18px}
+.quote{border-left:3px solid var(--accent);padding:4px 0 4px 14px;color:var(--ink);font-family:Georgia,serif;font-size:16px;margin:14px 0}
+/* stat */
+.statbar{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.stat .v{font-size:24px;font-weight:800;color:var(--accent)}
+.stat .l{font-size:12px;color:var(--muted)}
+/* category grid */
+.cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.cat-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 14px;text-align:left;transition:border-color .12s}
+.cat-card:hover{border-color:var(--accent)}
+.cat-card .t{font-weight:700;font-size:14.5px}
+.cat-card .c{font-size:12px;color:var(--muted);margin-top:2px}
+.cat-card.vol2 .t::before{content:"Ⅱ·";color:var(--accent2);margin-right:3px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--panel2);color:var(--ink)}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:#0d1117;border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.gold{border-color:var(--accent2);color:var(--accent2)}
+.btn.sm{padding:5px 10px;font-size:12.5px}
+/* q list */
+.q-item{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-bottom:9px;display:flex;gap:11px;align-items:flex-start;text-align:left}
+.q-item:hover{border-color:var(--accent)}
+.q-no{flex:0 0 auto;min-width:30px;text-align:center;font-family:Georgia,serif;font-size:15px;color:var(--accent2);font-weight:700;padding-top:1px}
+.q-item .qt{font-weight:600;font-size:15px}
+.q-item .qc{font-size:12.5px;color:var(--muted);margin-top:3px}
+.q-item .star{color:var(--warn);font-size:12px}
+/* detail */
+.detail-head .badge{display:inline-block;font-size:12px;color:var(--accent2);border:1px solid var(--accent2);border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.detail-head .star-badge{display:inline-block;font-size:12px;color:#0d1117;background:var(--warn);border-radius:99px;padding:2px 8px;margin-left:6px}
+.d-title{font-family:Georgia,serif;font-size:22px;margin:6px 0 12px;color:var(--accent2);line-height:1.45}
+.d-content{font-size:16.5px;line-height:1.85;white-space:pre-wrap}
+.prompt-box{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.prompt-box .k{font-size:12px;color:var(--accent);font-weight:700;letter-spacing:.5px}
+.prompt-box .v{font-size:13.5px;color:var(--muted);margin-top:3px}
+/* form */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;font-weight:600}
+.field textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:10px 12px;font-size:14px;font-family:inherit;line-height:1.6;resize:vertical}
+.field textarea:focus{outline:none;border-color:var(--accent)}
+.ver{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:9px}
+.ver .ts{font-size:12px;color:var(--accent2);font-weight:700}
+.ver .row{font-size:13.5px;margin-top:6px}
+.ver .row b{color:var(--muted);font-weight:600}
+/* related */
+.rel-item{display:inline-flex;gap:6px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:5px 12px;font-size:12.5px;margin:0 6px 6px 0}
+.rel-item:hover{border-color:var(--accent)}
+/* toolbar */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar input{flex:1;min-width:160px;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:9px 12px;font-size:14px}
+.toolbar input:focus{outline:none;border-color:var(--accent)}
+.chip{padding:6px 11px;border-radius:99px;font-size:12.5px;border:1px solid var(--line);color:var(--muted);font-weight:600}
+.chip.active{background:var(--accent);color:#0d1117;border-color:var(--accent)}
+.empty{padding:50px 10px;text-align:center;color:var(--muted)}
+.crumbs{font-size:13px;color:var(--muted);margin-bottom:12px}
+.crumbs b{color:var(--ink)}
+.back{font-size:13px;color:var(--accent);margin-bottom:12px;display:inline-block}
+/* methods */
+.m-item{margin-bottom:16px}
+.m-item .t{font-family:Georgia,serif;font-size:17px;color:var(--accent2);margin-bottom:4px}
+.m-item .d{color:var(--muted);font-size:14px}
+/* archive */
+.arch-sub{font-size:13px;color:var(--muted);margin:16px 0 8px;font-weight:700;letter-spacing:.5px}
+.tagline{text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px}
+@media (max-width:560px){
+  .cat-grid{grid-template-columns:1fr}
+  .statbar{grid-template-columns:repeat(3,1fr)}
+  .topnav button{padding:6px 10px;font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">思想档案馆<small>追问 · 没有标准答案</small></div>
+  <nav class="topnav">
+    <button data-v="home" class="active">首页</button>
+    <button data-v="browse">题库</button>
+    <button data-v="archive">档案</button>
+    <button data-v="methods">方法</button>
+  </nav>
+</div>
+<div class="content" id="app"></div>
+
+<script>
+const QUESTIONS = [{"id":1,"title":"意识上传","content":"如果一个人的意识、记忆、性格被完整上传到计算机，数字世界里的他究竟是本人，还是一个拥有相同记忆的复制品？","cat":"自我、意识与身份","star":false},{"id":2,"title":"意识复制","content":"如果原本的你与复制体同时存在，而且双方都坚信自己才是真正的你，那么谁拥有原本的身份？","cat":"自我、意识与身份","star":false},{"id":3,"title":"梦境五亿年","content":"如果你在现实中睡了一秒，却在梦中经历了五亿年的生命，那么梦里的你和醒来的你，哪个才是更真实的主体？","cat":"自我、意识与身份","star":false},{"id":4,"title":"忒修斯之船","content":"如果一个人的身体细胞、器官乃至大脑神经元都逐渐被替换成机械部件，到了最后，他还是原来的那个人吗？","cat":"自我、意识与身份","star":false},{"id":5,"title":"失忆与人格","content":"一个人失去全部记忆后，性格、价值观和行为方式都发生变化，他还是过去的那个人吗？如果恢复记忆，又是否意味着过去的自我重新夺回身体？","cat":"自我、意识与身份","star":false},{"id":6,"title":"过去的罪与现在的我","content":"一个失忆的杀人犯后来成为善良的人，他是否仍然应该为过去的罪行负责？","cat":"自我、意识与身份","star":false},{"id":7,"title":"自我与他人","content":"如果一个人的语言、思想、价值观和行为习惯都来自社会与他人，那么剥离所有外部影响后，还剩下多少真正属于自己的东西？","cat":"自我、意识与身份","star":false},{"id":8,"title":"两个相同的我","content":"如果一个人被复制成两个拥有完全相同记忆和人格的个体，他们是否应该拥有相同的财产、伴侣关系和社会身份？","cat":"自我、意识与身份","star":false},{"id":9,"title":"意识融合","content":"如果两个人的记忆、思想与意识完全融合，形成一个新的主体，那么原来的两个人是继续存在，还是都已经消失？","cat":"自我、意识与身份","star":false},{"id":10,"title":"身体与意识","content":"如果一个人的意识被转移到另一个身体里，那么决定他身份的究竟是意识、记忆、身体，还是这些因素共同形成的连续性？","cat":"自我、意识与身份","star":false},{"id":11,"title":"生命与记忆","content":"如果一个人失去全部记忆，却仍然拥有感情、意识与行动能力，他是否仍然拥有完整的人格？","cat":"自我、意识与身份","star":false},{"id":12,"title":"无梦睡眠","content":"如果一个人在无梦睡眠中完全没有主观时间体验，那么对于他而言，睡眠期间的自己是否仍然存在？","cat":"自我、意识与身份","star":false},{"id":13,"title":"基因永生","content":"如果一个人的基因通过繁衍不断传递，是否可以说他以另一种形式获得了永生？基因延续与个人存在是否是一回事？","cat":"自我、意识与身份","star":false},{"id":14,"title":"意识模型","content":"如果科学证明人的自我意识只是大脑构建出来的模型，那么自由选择、个人价值和自我认同还具有意义吗？","cat":"自我、意识与身份","star":false},{"id":15,"title":"史莱姆与记忆","content":"如果一种生物吞噬了你的爱人，并获得了对方的全部记忆、情感与性格，它究竟是你的爱人，还是一个披着爱人记忆的陌生生命？","cat":"自我、意识与身份","star":false},{"id":16,"title":"自我分裂","content":"如果一个人的意识被分成多个独立人格，每个人格都拥有不同的记忆和目标，那么他们是否应该被视为多个独立的人？","cat":"自我、意识与身份","star":false},{"id":17,"title":"人格改变","content":"如果一个人因为长期经历而彻底改变了价值观，甚至否定过去的自己，那么他是否有义务继续承担过去自我作出的承诺？","cat":"自我、意识与身份","star":false},{"id":18,"title":"观察自己的自己","content":"如果你能够实时观察自己的所有思想、情绪与决定，那么负责观察的那个你，是否又需要另一个自己来观察？","cat":"自我、意识与身份","star":true},{"id":19,"title":"自我消失","content":"如果一个人主动消除自我意识，不再拥有欲望、执念和个人目标，但身体仍然正常生活，这算是获得解脱，还是失去了作为一个人的存在？","cat":"自我、意识与身份","star":false},{"id":20,"title":"身份的边界","content":"如果一个人的记忆可以被他人共享，情感可以被复制，意识可以被拆分，那么未来社会还应该如何定义一个人的边界与权利？","cat":"自我、意识与身份","star":true},{"id":21,"title":"缸中之脑","content":"如果你的大脑一直被放在容器中，所有感官体验都由计算机制造，你有什么办法证明自己所处的世界是真实的？","cat":"现实、梦境、时间与宇宙","star":false},{"id":22,"title":"模拟宇宙","content":"如果我们生活在一个由更高文明创造的模拟宇宙中，那么发现真相之后，现实生活的价值会发生改变吗？","cat":"现实、梦境、时间与宇宙","star":false},{"id":23,"title":"无限嵌套梦境","content":"如果宇宙中的生命都生活在造梦机器里，而造梦机器本身又处于更高层的梦境中，那么最底层现实毁灭时，所有梦境是否都会同时消失？","cat":"现实、梦境、时间与宇宙","star":false},{"id":24,"title":"梦中生命的真实性","content":"如果梦中的生命拥有自己的意识、梦想、情感和痛苦，但他们无法证明自己处于梦境中，那么他们的存在是否真实？","cat":"现实、梦境、时间与宇宙","star":false},{"id":25,"title":"宇宙之外","content":"如果宇宙存在边界，那么边界之外是什么？如果宇宙没有边界，那么无限空间是否真的能够存在？","cat":"现实、梦境、时间与宇宙","star":false},{"id":26,"title":"大爆炸之前","content":"如果时间本身起源于大爆炸，那么询问大爆炸之前发生了什么，是否属于一个没有意义的问题？","cat":"现实、梦境、时间与宇宙","star":false},{"id":27,"title":"无人观察的世界","content":"如果某个地方从未被任何生命观察过，那么那里发生的一切是否依然真实存在？","cat":"现实、梦境、时间与宇宙","star":false},{"id":28,"title":"历史的真实","content":"如果一个人从未亲身经历某段历史，只能通过他人的记载认识它，那么历史对他而言究竟是事实，还是一种被接受的叙述？","cat":"现实、梦境、时间与宇宙","star":false},{"id":29,"title":"历史彻底抹除","content":"如果某段历史中的所有文字、影像、记忆和证据都被彻底消除，那么这段历史是否仍然拥有现实意义？","cat":"现实、梦境、时间与宇宙","star":false},{"id":30,"title":"主观时间","content":"为什么幸福时光总是感觉短暂，而痛苦时光却显得漫长？时间究竟是客观流逝，还是意识体验的产物？","cat":"现实、梦境、时间与宇宙","star":false},{"id":31,"title":"永恒轮回","content":"如果一个人的人生会无限次重复，而且每次都完全相同，那么他是否还拥有真正的选择？","cat":"现实、梦境、时间与宇宙","star":false},{"id":32,"title":"轮回与改变","content":"如果每一次轮回都会延长一段时间，直到某次轮回终于出现不同结果，那么之前的无数次人生是否只是为了等待那一次改变？","cat":"现实、梦境、时间与宇宙","star":false},{"id":33,"title":"熵增与逆转","content":"如果宇宙拥有无限的时间，混乱物质是否可能自发重新形成高度有序的结构，甚至逆转熵增？","cat":"现实、梦境、时间与宇宙","star":false},{"id":34,"title":"宇宙热寂","content":"如果宇宙最终走向热寂，所有恒星、生命与文明都将消失，那么宇宙曾经诞生过生命这件事还有意义吗？","cat":"现实、梦境、时间与宇宙","star":false},{"id":35,"title":"微观宇宙","content":"如果一个原子内部可能存在一个完整宇宙，而那个宇宙中的生命又把更小的粒子视为自己的宇宙，那么尺度是否存在真正的终点？","cat":"现实、梦境、时间与宇宙","star":false},{"id":36,"title":"自我观测","content":"如果一个观察者试图观察自己，那么他是否能够完全脱离自身的观察视角，获得绝对客观的认识？","cat":"现实、梦境、时间与宇宙","star":false},{"id":37,"title":"时间旅行与祖父悖论","content":"如果一个人回到过去杀死自己的祖父，那么他是否还会出生？如果不会出生，又是谁回到了过去？","cat":"现实、梦境、时间与宇宙","star":false},{"id":38,"title":"未来与现在","content":"如果未来已经确定，并且所有事件都早已发生，那么我们现在的选择究竟是在创造未来，还是在完成既定过程？","cat":"现实、梦境、时间与宇宙","star":false},{"id":39,"title":"芝诺悖论","content":"如果一个人必须先走完一段距离的一半，再走剩下距离的一半，如此无限分割，那么他是否真的能够到达终点？","cat":"现实、梦境、时间与宇宙","star":false},{"id":40,"title":"永恒的价值","content":"如果宇宙永远不会结束，那么任何文明、生命与成就是否都只是无限时间中的短暂片段？永恒是否会让一切价值失去重量？","cat":"现实、梦境、时间与宇宙","star":true},{"id":41,"title":"欲望与自由","content":"如果人的每一个选择都受到欲望、基因、环境与经历影响，那么我们所谓的自由意志是否只是大脑制造的感觉？","cat":"自由意志、命运与责任","star":false},{"id":42,"title":"命运与选择","content":"如果一个人的人生从出生开始就已经被决定，那么他还有必要努力改变命运吗？","cat":"自由意志、命运与责任","star":false},{"id":43,"title":"强制选择","content":"如果有人植入监控装置，强迫你选择B，但你最后确实主动选择了B，那么这个选择还属于自由意志吗？","cat":"自由意志、命运与责任","star":false},{"id":44,"title":"思想操控","content":"如果一个人长期受到洗脑，最终真心相信某种错误思想，并主动实施伤害行为，那么责任应该由本人承担，还是由操控者承担？","cat":"自由意志、命运与责任","star":false},{"id":45,"title":"预言与未来","content":"如果有人准确预言一个人未来必然自杀，那么这个人是否能够通过知道预言来改变结局？","cat":"自由意志、命运与责任","star":false},{"id":46,"title":"预防犯罪","content":"如果大数据能够准确预测一个人未来会犯罪，社会是否有权在他犯罪之前限制甚至惩罚他？","cat":"自由意志、命运与责任","star":false},{"id":47,"title":"胁迫与责任","content":"如果一个人被迫伤害陌生人，否则自己的家人就会死亡，那么他应该为伤害行为承担多少责任？","cat":"自由意志、命运与责任","star":false},{"id":48,"title":"道德运气","content":"两个酒驾者拥有相同的主观过错，一个没有造成事故，另一个意外撞死人。两个人应该受到相同的惩罚吗？","cat":"自由意志、命运与责任","star":false},{"id":49,"title":"过去与未来","content":"如果一个人曾经为你付出巨大代价，他是否因此获得了左右你未来选择的资格？","cat":"自由意志、命运与责任","star":false},{"id":50,"title":"改变命运","content":"如果一个人知道某件悲剧注定发生，却有机会阻止它，他是否应该承担改变历史所带来的未知后果？","cat":"自由意志、命运与责任","star":false},{"id":51,"title":"自我选择","content":"如果一个人选择成为自己讨厌的人，只因为这样能够获得利益，那么这个选择是否仍然代表真实的自我？","cat":"自由意志、命运与责任","star":false},{"id":52,"title":"无法控制的恶","content":"如果一个人天生具有极强的攻击欲望，却一直努力压制自己，那么他是否应该因为这些无法控制的欲望而受到道德谴责？","cat":"自由意志、命运与责任","star":false},{"id":53,"title":"环境与罪责","content":"如果一个人的犯罪行为完全由贫困、暴力环境和教育缺失造成，那么惩罚他是否公平？","cat":"自由意志、命运与责任","star":false},{"id":54,"title":"自愿被控制","content":"如果一个人明知道自己会被操控，却主动接受这种控制，因为它能带来安全感，那么他是否应该为后续行为负责？","cat":"自由意志、命运与责任","star":false},{"id":55,"title":"选择的幻觉","content":"如果科学家能够在一个人意识到自己作出决定之前，准确预测他即将选择什么，那么这是否证明人的选择并不自由？","cat":"自由意志、命运与责任","star":true},{"id":56,"title":"责任的转移","content":"如果一个人把所有决定都交给人工智能，并明确授权AI替自己行动，那么出现严重后果时，责任应该由谁承担？","cat":"自由意志、命运与责任","star":false},{"id":57,"title":"服从命令","content":"如果一个人只是在执行上级命令，没有主动伤害他人的意愿，那么他能否以服从命令为理由免除责任？","cat":"自由意志、命运与责任","star":false},{"id":58,"title":"反抗的代价","content":"如果一个人反抗不公正制度会导致更多无辜者受害，那么他应该坚持反抗，还是暂时服从以减少伤害？","cat":"自由意志、命运与责任","star":false},{"id":59,"title":"未来责任","content":"如果今天的选择会对一百年后的陌生人造成巨大影响，而这些人尚未出生，我们是否需要为他们承担责任？","cat":"自由意志、命运与责任","star":false},{"id":60,"title":"自由的重量","content":"如果一个人拥有无限选择权，却因此长期陷入焦虑、犹豫和后悔，那么自由是否也可能成为一种负担？","cat":"自由意志、命运与责任","star":true},{"id":61,"title":"善恶与人格","content":"如果一个失忆的杀人犯后来救助了无数人，他究竟是善良的人，还是一个曾经作恶、后来行善的人？","cat":"伦理、善恶与正义","star":false},{"id":62,"title":"善意与结果","content":"如果一个人怀着恶意做事，却意外帮助了许多人，这种行为应该被视为善行吗？","cat":"伦理、善恶与正义","star":false},{"id":63,"title":"梦中犯罪","content":"如果一个人在梦中实施了现实中无法接受的恶行，醒来后却没有任何实际伤害，那么他是否需要为梦中的行为承担道德责任？","cat":"伦理、善恶与正义","star":false},{"id":64,"title":"不作为","content":"如果一个人有能力救助正在遭受危险的陌生人，却选择旁观，他是否与直接伤害对方的人一样有责任？","cat":"伦理、善恶与正义","star":false},{"id":65,"title":"迟到的正义","content":"如果一个人死后才得到平反，那么迟来的正义究竟是在弥补错误，还是只是在安慰活着的人？","cat":"伦理、善恶与正义","star":false},{"id":66,"title":"以暴制暴","content":"如果法律无法制止一个恶人，而受害者通过暴力复仇成功，那么这种复仇是否正当？","cat":"伦理、善恶与正义","star":false},{"id":67,"title":"两难救援","content":"如果一名孕妇必须接受癌症手术才能保住生命，但手术必然导致胎儿死亡，医生应该如何选择？","cat":"伦理、善恶与正义","star":false},{"id":68,"title":"救生艇困境","content":"如果一艘救生艇上的人不够所有人存活，幸存者通过抽签决定谁被牺牲，甚至不得不食人才能活下去，他们是否应该受到惩罚？","cat":"伦理、善恶与正义","star":false},{"id":69,"title":"承诺与伤害","content":"如果你答应一个人永远保守秘密，但这个秘密一旦不公开就会伤害无辜者，你应该遵守承诺还是阻止伤害？","cat":"伦理、善恶与正义","star":false},{"id":70,"title":"爱人与正义","content":"如果你深爱的人是一个严重伤害他人的罪犯，你应该保护他、举报他，还是亲自阻止他？","cat":"伦理、善恶与正义","star":false},{"id":71,"title":"忠诚与亲情","content":"如果国家要求你揭发自己的至亲，而亲人又确实犯下严重罪行，你应该忠于国家还是亲情？","cat":"伦理、善恶与正义","star":false},{"id":72,"title":"作品与作者","content":"如果一个艺术家在私人生活中是恶人，但创造了能够改变无数人生命的伟大作品，我们应该如何评价他的艺术？","cat":"伦理、善恶与正义","star":false},{"id":73,"title":"善意的责任","content":"如果你为了帮助一个人作出决定，最终却导致他的人生彻底毁灭，那么你的善意能否减轻责任？","cat":"伦理、善恶与正义","star":false},{"id":74,"title":"多数人的快乐","content":"如果一个群体通过嘲笑、羞辱和折磨少数人获得快乐，而这种快乐能够提升整个群体的幸福程度，那么这种行为是否具有正当性？","cat":"伦理、善恶与正义","star":false},{"id":75,"title":"功利主义救援","content":"如果立即救助100个人能够避免他们死亡，但等待一段时间可以救助200个人，你是否应该冒着前100人死亡的风险等待？","cat":"伦理、善恶与正义","star":false},{"id":76,"title":"生命交换","content":"如果必须随机牺牲一名陌生人才能拯救另外十个人，那么牺牲一个人的生命是否可以被计算为合理代价？","cat":"伦理、善恶与正义","star":false},{"id":77,"title":"先天差异与公平","content":"如果人类天生拥有不同的智力、体能和才能，那么社会应该追求结果平等，还是只保障机会平等？","cat":"伦理、善恶与正义","star":false},{"id":78,"title":"公平竞争","content":"如果一个寒门学生和一个富裕家庭的学生考试成绩相同，但名额只有一个，社会应该优先照顾谁？","cat":"伦理、善恶与正义","star":false},{"id":79,"title":"自愿贫穷","content":"如果一个人主动选择贫穷和简单生活，却依靠其他人的劳动成果维持生活，他是否有权要求社会继续供养自己？","cat":"伦理、善恶与正义","star":false},{"id":80,"title":"规则与正义","content":"如果道德规则完全由人类制定，不同社会又有不同标准，那么是否存在一种不依赖任何文化的共同道德底线？","cat":"伦理、善恶与正义","star":false},{"id":81,"title":"理想制度","content":"如果一个制度能够消除贫困、阶级与剥削，却需要人们放弃部分个人自由，那么它是否值得追求？","cat":"政治、社会与制度","star":false},{"id":82,"title":"牺牲一代","content":"如果牺牲一代人的幸福，可以让后代永久生活在富足和平等的社会中，这种牺牲是否正当？","cat":"政治、社会与制度","star":false},{"id":83,"title":"未来世代的选择","content":"如果上一代建立了一套自己认为最理想的制度，未来世代是否有权推翻它，即使推翻后可能重新出现不平等？","cat":"政治、社会与制度","star":false},{"id":84,"title":"政党与信仰","content":"如果一个政党要求成员相信其最终目标，并以牺牲个人利益换取集体理想，那么它与宗教信仰之间存在怎样的区别？","cat":"政治、社会与制度","star":false},{"id":85,"title":"信仰与组织","content":"为什么拥有共同信仰的普通人，有时能够形成比少数精英更强大的集体行动能力？这种力量如何被利用和操纵？","cat":"政治、社会与制度","star":false},{"id":86,"title":"制度与恶人","content":"如果一个制度让普通人在执行职责时不断伤害他人，那么作恶的究竟是个人，还是制度本身？","cat":"政治、社会与制度","star":false},{"id":87,"title":"腐败与权力","content":"如果所有人都可能受到利益诱惑，那么是否存在一种能够彻底避免腐败的制度？","cat":"政治、社会与制度","star":false},{"id":88,"title":"自由与包容","content":"如果一个群体以自由为理由，持续侵犯另一个群体的自由，社会应该如何划定边界？","cat":"政治、社会与制度","star":false},{"id":89,"title":"多元与共识","content":"一个社会应该允许不同价值观长期争吵，还是应该建立统一的共同价值，以维持社会稳定？","cat":"政治、社会与制度","star":false},{"id":90,"title":"人情与民主","content":"如果人情关系、亲疏远近和私人偏好无法从社会生活中彻底消除，那么民主制度能否真正做到平等对待每个人？","cat":"政治、社会与制度","star":false},{"id":91,"title":"爱屋及乌","content":"如果一个人因为深爱某个人而开始偏爱对方所属的群体，那么这种情感是正常的归属感，还是一种容易演变成偏见的心理机制？","cat":"政治、社会与制度","star":false},{"id":92,"title":"群体临界点","content":"如果大多数人原本反对某种行为，但当越来越多人开始接受它时，剩下的人是否也会逐渐改变立场？","cat":"政治、社会与制度","star":false},{"id":93,"title":"全球合作困境","content":"如果全球所有国家都希望实现共同繁荣，却又担心自己先作出让步会遭受损失，那么人类应该如何建立真正可靠的合作制度？","cat":"政治、社会与制度","star":false},{"id":94,"title":"历史与个人","content":"一个王朝的灭亡究竟应该归咎于君主的错误，还是经济结构、社会矛盾、自然灾害等客观因素？","cat":"政治、社会与制度","star":false},{"id":95,"title":"胜利者书写历史","content":"如果历史主要由胜利者记录，那么失败者的真实经历应该如何被保存和验证？","cat":"政治、社会与制度","star":false},{"id":96,"title":"结果与正当性","content":"如果一种制度最终带来了繁荣，那么它过去使用的压迫、暴力和牺牲是否会因此变得合理？","cat":"政治、社会与制度","star":false},{"id":97,"title":"权力与监督","content":"如果一个统治者最初确实为了人民利益行使权力，但后来逐渐不再接受监督，人民应该相信他的初心，还是限制他的权力？","cat":"政治、社会与制度","star":true},{"id":98,"title":"安全与隐私","content":"如果一个社会通过全面监控消灭了犯罪，却让每个人都失去私人空间，这算不算理想社会？","cat":"政治、社会与制度","star":true},{"id":99,"title":"法律与道德","content":"如果一个社会中的所有人都遵守法律，但法律本身严重不公正，那么这个社会是否仍然可以称为正义社会？","cat":"政治、社会与制度","star":true},{"id":100,"title":"多数人的自由","content":"如果多数人自愿放弃部分自由，以换取绝对安全，那么少数不愿意放弃自由的人是否仍然有权拒绝？","cat":"政治、社会与制度","star":true},{"id":101,"title":"动物意识","content":"如果动物拥有与人类相似的意识和情感，那么人类对动物的饲养、实验和杀戮是否应该被重新定义？","cat":"生命、进化与科学","star":false},{"id":102,"title":"蜜蜂的牺牲","content":"为什么蜜蜂等群体性生物会为了整个群体牺牲个体生命？利他行为究竟是道德选择，还是进化结果？","cat":"生命、进化与科学","star":false},{"id":103,"title":"两性生殖","content":"如果无性繁殖能够直接复制自身，为什么生命演化出了需要两个个体参与的有性生殖？","cat":"生命、进化与科学","star":false},{"id":104,"title":"情感与激素","content":"如果人的爱、愤怒、恐惧和幸福都与神经递质及激素有关，那么这些情感是否只是生物化学反应？","cat":"生命、进化与科学","star":false},{"id":105,"title":"感官与现实","content":"如果人类的感官只能接收宇宙中极小一部分信息，那么我们创造的仪器是否能够帮助我们突破自身认知的边界？","cat":"生命、进化与科学","star":false},{"id":106,"title":"植物与熵增","content":"植物通过固定生长、吸收能量与构建结构来维持局部有序，那么生命是否可以被视为对抗混乱的一种方式？","cat":"生命、进化与科学","star":false},{"id":107,"title":"衰老与永生","content":"为什么生命会衰老？如果科技能够修复所有身体损伤，人类是否有可能获得真正的永生？","cat":"生命、进化与科学","star":false},{"id":108,"title":"生命起源","content":"如果原始地球最初不存在生命，那么无生命的物质究竟如何形成了第一个能够自我复制和演化的生命系统？","cat":"生命、进化与科学","star":false},{"id":109,"title":"催化剂与免费工作","content":"如果一种催化剂能够大幅降低反应所需的能量，却不被反应消耗，那么它是否可以被视为一种不付出代价的工作方式？","cat":"生命、进化与科学","star":false},{"id":110,"title":"人造生命","content":"如果科学家能够制造蛋白质、器官和完整的活体组织，那么人造生命与自然生命之间还存在本质区别吗？","cat":"生命、进化与科学","star":false},{"id":111,"title":"费米悖论","content":"如果宇宙拥有如此庞大的星系与恒星数量，为什么人类至今没有发现明确的外星文明？","cat":"生命、进化与科学","star":false},{"id":112,"title":"动物审美","content":"如果动物也拥有审美偏好，那么人类所认为的美，是否只是某种特定进化环境下形成的主观标准？","cat":"生命、进化与科学","star":false},{"id":113,"title":"外貌与审美","content":"如果宇宙中所有智慧生命都拥有完全相同的外貌，那么美丑的判断还会存在吗？","cat":"生命、进化与科学","star":false},{"id":114,"title":"生命与熵增","content":"如果生命必须不断吸收能量才能维持自身秩序，那么生命究竟是在抵抗熵增，还是在帮助宇宙更快地增加总熵？","cat":"生命、进化与科学","star":false},{"id":115,"title":"进化与目的","content":"如果进化没有预先设定的目标，那么人类是否只是偶然产生的生命分支，而不是进化的最终成果？","cat":"生命、进化与科学","star":false},{"id":116,"title":"大脑与主观体验","content":"如果大脑只是由细胞、神经元和化学反应组成，那么这些物质如何产生第一人称的主观体验？","cat":"生命、进化与科学","star":false},{"id":117,"title":"生命的边界","content":"如果一种病毒不能独立完成所有生命活动，却能够复制和演化，那么生命与非生命之间是否存在清晰界限？","cat":"生命、进化与科学","star":false},{"id":118,"title":"人类改造自然","content":"如果人类通过基因技术消除所有遗传疾病，却同时改变了自然选择过程，那么这算是生命进步，还是对自然演化的干预？","cat":"生命、进化与科学","star":false},{"id":119,"title":"科学与未知","content":"如果一种自然现象永远无法被人类现有感官或仪器测量，那么它是否仍然属于科学研究的对象？","cat":"生命、进化与科学","star":true},{"id":120,"title":"进化的代价","content":"如果一种新生命形式能够让整个物种变得更强大，却必然导致原有物种消亡，那么这种进化是否可以被称为进步？","cat":"生命、进化与科学","star":true},{"id":121,"title":"无法描述的存在","content":"如果某种事物无法被语言、图像或任何形式表达，那么我们是否还能确定它存在？","cat":"知识、语言、逻辑与认知","star":false},{"id":122,"title":"语言与现实","content":"语言究竟只是描述现实的工具，还是语言本身也在塑造人类理解现实的方式？","cat":"知识、语言、逻辑与认知","star":false},{"id":123,"title":"说谎者悖论","content":"如果一个人说出“我现在说的这句话是假的”，那么这句话究竟是真还是假？","cat":"知识、语言、逻辑与认知","star":false},{"id":124,"title":"鳄鱼悖论","content":"如果鳄鱼承诺只有在母亲猜对孩子是否会被吃掉时才归还孩子，而母亲猜测鳄鱼不会归还，那么鳄鱼应该如何履行承诺？","cat":"知识、语言、逻辑与认知","star":false},{"id":125,"title":"鼻子悖论","content":"如果一个人说“我的鼻子马上就会变长”，而他的鼻子只有在他说谎时才会变长，那么这个判断会导致什么结果？","cat":"知识、语言、逻辑与认知","star":false},{"id":126,"title":"全能悖论","content":"如果上帝无所不能，那么他能否创造一块连自己也举不起来的石头？","cat":"知识、语言、逻辑与认知","star":false},{"id":127,"title":"沙堆悖论","content":"如果一粒沙子不算沙堆，那么不断增加沙子，究竟从哪一粒开始才算真正形成沙堆？","cat":"知识、语言、逻辑与认知","star":false},{"id":128,"title":"直觉与现实","content":"人类通过有限的感官和经验建立世界模型，那么我们所理解的世界有多少是真实，又有多少只是大脑的推测？","cat":"知识、语言、逻辑与认知","star":false},{"id":129,"title":"简单解释","content":"如果人类总是倾向于选择简单的解释，那么这种认知习惯是否会让我们忽略真正复杂的现实？","cat":"知识、语言、逻辑与认知","star":false},{"id":130,"title":"完美复刻","content":"如果一幅已经失传的名画被完美复刻，连每一道笔触都完全相同，那么复制品是否拥有与原作相同的艺术价值？","cat":"知识、语言、逻辑与认知","star":false},{"id":131,"title":"猫的艺术","content":"如果一只猫无意识地留下了一幅极其美丽的画作，那么这幅画是否可以被称为艺术？","cat":"知识、语言、逻辑与认知","star":false},{"id":132,"title":"AI艺术","content":"如果人工智能能够独立创作出打动人类的作品，那么它是否有资格成为艺术家？","cat":"知识、语言、逻辑与认知","star":false},{"id":133,"title":"真理与共识","content":"如果全世界的人都相信一个错误的观点，那么这个观点是否会因此成为社会意义上的真理？","cat":"知识、语言、逻辑与认知","star":false},{"id":134,"title":"知识的边界","content":"如果人类只能通过自身认知结构理解世界，那么我们是否永远无法知道世界本身究竟是什么样子？","cat":"知识、语言、逻辑与认知","star":false},{"id":135,"title":"数学与现实","content":"如果数学是人类创造的抽象体系，为什么它能够如此准确地描述宇宙中的物理规律？","cat":"知识、语言、逻辑与认知","star":false},{"id":136,"title":"证明与相信","content":"如果一个观点无法被证明是错误的，但也无法被证明是正确的，我们是否应该相信它？","cat":"知识、语言、逻辑与认知","star":false},{"id":137,"title":"无知的幸福","content":"如果一个人因为不知道真相而过得幸福，而知道真相后必然痛苦，那么他是否有权利拒绝知道？","cat":"知识、语言、逻辑与认知","star":false},{"id":138,"title":"知识的危险","content":"如果一项知识能够帮助人类进步，同时也可能造成毁灭性的后果，那么科学家是否应该主动限制知识传播？","cat":"知识、语言、逻辑与认知","star":false},{"id":139,"title":"观察者偏差","content":"如果所有能够研究宇宙的生命，都只能诞生在适合生命存在的宇宙中，那么人类观察到宇宙适宜生命，是否只是选择偏差？","cat":"知识、语言、逻辑与认知","star":true},{"id":140,"title":"不可知的真理","content":"如果有一个真理永远无法被任何智慧生命理解，那么它对宇宙的存在是否仍然具有意义？","cat":"知识、语言、逻辑与认知","star":true},{"id":141,"title":"爱是占有还是放手","content":"如果你深爱一个人，但你的存在会让他承受痛苦，你应该选择继续陪伴，还是主动离开？","cat":"爱情、人际关系与他者","star":false},{"id":142,"title":"无回应的爱","content":"如果你愿意接受一个人的破碎与痛苦，即使他永远不会回应你，这种爱是否仍然具有完整价值？","cat":"爱情、人际关系与他者","star":false},{"id":143,"title":"爱情与共在","content":"如果爱情意味着双方互相供给、共同生活，那么单方面的深刻爱意是否能够构成真正的爱情？","cat":"爱情、人际关系与他者","star":false},{"id":144,"title":"残疾与放手","content":"如果伴侣因意外失去行动能力，需要另一方长期照顾，那么是否有人应该主动放手，让对方寻找更轻松的生活？","cat":"爱情、人际关系与他者","star":false},{"id":145,"title":"爱与执念","content":"如果一个人始终无法忘记已经离世的爱人，那么这是忠诚，还是对过去的执念？","cat":"爱情、人际关系与他者","star":false},{"id":146,"title":"真相与保护","content":"如果你深爱的人正处于幸福的谎言中，而揭露真相会让他彻底崩溃，你应该告诉他真相吗？","cat":"爱情、人际关系与他者","star":false},{"id":147,"title":"理解与共情","content":"如果你能够准确理解一个人的所有思想，却无法感受到他的痛苦，那么你真的理解他吗？","cat":"爱情、人际关系与他者","star":false},{"id":148,"title":"人际中的真诚","content":"如果一个人坚持完全真诚，却经常伤害他人的感情，那么他应该改变表达方式，还是坚持自己的真实性？","cat":"爱情、人际关系与他者","star":false},{"id":149,"title":"隐忍与反抗","content":"当你与他人发生矛盾时，隐忍可能维持关系，反驳可能维护尊严，你应该如何选择？","cat":"爱情、人际关系与他者","star":false},{"id":150,"title":"利用与帮助","content":"如果一个人帮助别人只是为了获得认可，那么这种行为还算善良吗？","cat":"爱情、人际关系与他者","star":false},{"id":151,"title":"被需要的价值","content":"如果一个人只有在别人需要自己的时候，才能感受到存在价值，那么他究竟是在爱别人，还是在依赖被需要的感觉？","cat":"爱情、人际关系与他者","star":false},{"id":152,"title":"友谊与利益","content":"如果一段友谊在双方失去共同利益后便逐渐消失，那么过去的感情是否仍然真实？","cat":"爱情、人际关系与他者","star":false},{"id":153,"title":"亲密与隐私","content":"如果两个人相爱，就应该向对方公开全部秘密吗？亲密关系是否也需要不可侵犯的个人空间？","cat":"爱情、人际关系与他者","star":false},{"id":154,"title":"原谅与责任","content":"如果一个伤害过你的人真心悔改，并且已经无法弥补损失，你是否有义务原谅他？","cat":"爱情、人际关系与他者","star":false},{"id":155,"title":"拯救与尊重","content":"如果你认为一个朋友正在毁掉自己的人生，而他拒绝接受帮助，你是否应该强行介入？","cat":"爱情、人际关系与他者","star":false},{"id":156,"title":"他人的人生","content":"如果你确信某种选择对另一个人更好，但他坚持选择另一条路，你是否有权替他决定？","cat":"爱情、人际关系与他者","star":false},{"id":157,"title":"熟悉与陌生","content":"如果一个人陪伴你一生，却从未真正了解你，那么你们之间的关系究竟算亲密还是陌生？","cat":"爱情、人际关系与他者","star":false},{"id":158,"title":"离别与记忆","content":"如果一个人离开后，你逐渐忘记他的声音、面容和细节，那么你是否也在逐渐失去曾经爱过他的证据？","cat":"爱情、人际关系与他者","star":true},{"id":159,"title":"关系中的牺牲","content":"如果一段关系长期依靠其中一方不断牺牲才能维持，那么这种关系究竟是爱，还是不平等的依赖？","cat":"爱情、人际关系与他者","star":true},{"id":160,"title":"无法理解的他人","content":"如果每个人都有无法被别人完全理解的内心世界，那么人类之间是否可能真正达到完全的共鸣？","cat":"爱情、人际关系与他者","star":true},{"id":161,"title":"痛苦与幸福","content":"如果人类通过痛苦认识幸福，那么一个从未经历痛苦的人，是否能够真正理解幸福？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":162,"title":"虚拟幸福","content":"如果机器能够无限提供快乐，让人永远生活在幸福的虚拟世界里，你是否愿意放弃真实世界？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":163,"title":"猪式幸福与智者痛苦","content":"如果一头无忧无虑的猪比一个思考人生、承受痛苦的哲学家更加幸福，那么哪一种生活更值得追求？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":164,"title":"从未拥有与失去","content":"一个人从未得到过自己渴望的东西，和一个人得到后又彻底失去，哪一种痛苦更深？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":165,"title":"物质与空虚","content":"如果一个人已经拥有充足的物质财富，却依然感到精神空虚，那么幸福是否真的能够通过物质满足实现？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":166,"title":"欲望的上限","content":"如果人类的欲望永远不会彻底满足，那么幸福是否注定只是短暂的状态？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":167,"title":"劳动与主体性","content":"如果未来机器能够完成所有劳动，人类不再需要工作，那么人们会获得真正的自由，还是陷入失去目标的虚无？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":168,"title":"嘲讽与快乐","content":"如果一个人通过嘲笑、攀比和贬低别人获得快乐，而这种快乐确实让他感到满足，那么这种快乐与真正的幸福有什么区别？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":169,"title":"末法与百花齐放","content":"如果社会中的思想和艺术越来越多元，缺乏统一标准，这究竟意味着文明衰落，还是思想自由的繁荣？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":170,"title":"信仰破灭","content":"如果一个人一生为了某种信仰奉献自己，晚年却发现信仰可能是错误的，那么他过去的善意与牺牲还具有价值吗？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":171,"title":"生命的丰富","content":"一个人拥有丰富多彩的人生，却很少与他人建立深刻联系；另一个人生活平凡，却与许多人建立了真挚关系。哪一种人生更有价值？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":172,"title":"外界认可与本心","content":"如果一个人的理想无法得到任何人的认可，他应该坚持自己的道路，还是重新审视自己的价值？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":173,"title":"虚无与美好","content":"当世界没有客观意义时，人是否应该通过创造目标和关系来赋予生活意义？又该如何避免把虚构的意义当成绝对真理？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":174,"title":"未知与恐惧","content":"如果探索未知可能带来巨大收获，也可能造成无法挽回的损失，我们应该追求未知，还是接受安全的现状？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":175,"title":"自定义规则","content":"如果世界不存在最终裁判，人是否有权为自己建立一套生活规则，甚至创造属于自己的价值体系？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":176,"title":"希望与绝症","content":"如果一个人失去希望多年，终于重新找到人生目标，却马上被诊断出绝症，那么短暂的希望究竟是幸运还是残酷？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":177,"title":"肉体与精神","content":"如果一个人仍然拥有呼吸、心跳和身体活动，却完全失去了精神追求、情感与念想，那么他还算真正活着吗？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":178,"title":"无人知晓的努力","content":"如果一个人一生做出了伟大发现，却从未被任何人知道，甚至所有资料最终都被毁灭，那么他的努力还有意义吗？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":179,"title":"宏大信仰","content":"人类是否需要一种宏大的共同信仰才能继续前进，还是每个人都可以拥有彼此不同的生活意义？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":180,"title":"意义的来源","content":"意义究竟是宇宙中等待人类发现的客观存在，还是人类为了生活而共同创造出来的东西？","cat":"幸福、欲望、艺术与人生意义","star":false},{"id":181,"title":"文明进步的终点","content":"如果人类最终实现永生、消灭疾病、解决物质匮乏，文明是否还需要继续进步？进步是否必须拥有终点？","cat":"文明、未来与终极选择","star":false},{"id":182,"title":"人类与人工智能","content":"如果人工智能在智力、创造力和道德判断上全面超过人类，人类是否仍然有资格决定文明的未来？","cat":"文明、未来与终极选择","star":false},{"id":183,"title":"创造者与创造物","content":"如果人类创造的人工生命拥有独立意识和自主愿望，那么创造者是否有权随意关闭它？","cat":"文明、未来与终极选择","star":false},{"id":184,"title":"下一代的设计","content":"如果未来父母能够自由设计孩子的智力、性格、外貌和情感，那么父母是在创造生命，还是在制造符合自己期待的产品？","cat":"文明、未来与终极选择","star":false},{"id":185,"title":"幸福与探索","content":"如果一个文明能够让所有人永远幸福，却必须消除他们探索未知的欲望，那么这种文明还值得追求吗？","cat":"文明、未来与终极选择","star":false},{"id":186,"title":"制度与质疑","content":"如果一个制度持续产生优秀结果，却不允许人民质疑它，那么它究竟是优秀制度，还是依赖服从维持的统治？","cat":"文明、未来与终极选择","star":false},{"id":187,"title":"绝对和平","content":"如果一个社会为了避免冲突，禁止任何可能冒犯他人的观点，那么和平是否已经变成另一种压迫？","cat":"文明、未来与终极选择","star":false},{"id":188,"title":"人类与其他智慧生命","content":"如果人类遇到一个比自己先进得多的外星文明，而对方认为人类只是低等生命，那么人类是否应该接受对方制定的规则？","cat":"文明、未来与终极选择","star":false},{"id":189,"title":"文明的记忆","content":"如果一个文明可以把全部历史、知识和记忆保存下来，却必须牺牲一个新生命作为存储代价，那么保存文明是否值得？","cat":"文明、未来与终极选择","star":false},{"id":190,"title":"人类灭绝与创造","content":"如果人类最终必然灭绝，文明留下的所有知识也会消失，那么今天的创造、探索与努力还有什么意义？","cat":"文明、未来与终极选择","star":false},{"id":191,"title":"永恒幸福","content":"如果一个人能够永久留在自己最幸福的一天，不再经历未来，他是在获得永恒幸福，还是放弃了继续成为自己的可能？","cat":"文明、未来与终极选择","star":false},{"id":192,"title":"个人与文明的牺牲","content":"如果一个人必须永远承受痛苦，才能维持整个文明的幸福，那么文明是否值得被拯救？","cat":"文明、未来与终极选择","star":false},{"id":193,"title":"文明与个体权利","content":"如果一个文明的延续必须建立在剥夺少数人的人格、记忆与自由之上，那么它是否还有存在的正当性？","cat":"文明、未来与终极选择","star":false},{"id":194,"title":"未来人类的定义","content":"如果未来人类通过基因改造、机械替换和意识融合，已经与现在的人类完全不同，那么他们还应该继承人类文明的身份吗？","cat":"文明、未来与终极选择","star":false},{"id":195,"title":"不可逆的进步","content":"如果一种科技能够彻底改变人类社会，但一旦使用就无法恢复原状，那么人类是否应该为了未知的未来承担不可逆的风险？","cat":"文明、未来与终极选择","star":false},{"id":196,"title":"未来人的权利","content":"如果未来世代尚未出生，他们是否有权要求当代人保护环境、资源和社会制度？尚未存在的人是否拥有现在的权利？","cat":"文明、未来与终极选择","star":false},{"id":197,"title":"文明的自我毁灭","content":"如果一个文明拥有足够强大的科技，却因为内部冲突不断走向自我毁灭，那么智慧是否真的能够保证文明存续？","cat":"文明、未来与终极选择","star":false},{"id":198,"title":"创造新世界","content":"如果人类能够创造一个新的宇宙，并让其中的生命拥有完整意识与自由，那么创造者是否应该对这些生命承担道德责任？","cat":"文明、未来与终极选择","star":false},{"id":199,"title":"终极目标","content":"如果人类最终找到了宇宙的起源、生命的意义和所有问题的答案，那么失去未知之后，人类是否还会继续探索？","cat":"文明、未来与终极选择","star":false},{"id":200,"title":"存在的痕迹","content":"如果一个人一生努力创造、爱过、帮助过别人，但最终没有留下任何可被后世记住的记录，那么他是否真的没有在这个世界存在过？","cat":"文明、未来与终极选择","star":false},{"id":201,"title":"自我欺骗","content":"如果一个人明明知道自己在欺骗自己，却仍然选择相信那个谎言，那么他究竟是在保护自己，还是正在逐渐失去认识现实的能力？","cat":"心理、人格与人性","star":true},{"id":202,"title":"情绪的真实性","content":"如果科学家能够通过刺激大脑，让一个人产生强烈的爱、悲伤或幸福，那么这些情感与自然产生的情感是否具有相同的价值？","cat":"心理、人格与人性","star":false},{"id":203,"title":"人格的可塑性","content":"如果一个人可以自由修改自己的性格，删除懦弱、嫉妒、恐惧和自卑，那么修改之后的他，还是原来的自己吗？","cat":"心理、人格与人性","star":true},{"id":204,"title":"自卑与优越感","content":"如果一个人必须通过贬低别人才能维持自信，那么他的自信是真实的，还是依赖他人弱点建立起来的心理防御？","cat":"心理、人格与人性","star":false},{"id":205,"title":"恐惧与勇气","content":"如果一个人天生没有恐惧感，他在危险面前表现出的无畏还算勇敢吗？勇气是否必须建立在恐惧之上？","cat":"心理、人格与人性","star":true},{"id":206,"title":"人性的善恶","content":"如果一个人从未经历贫困、背叛、战争和生存危机，我们是否有资格判断他在极端环境下仍然会保持善良？","cat":"心理、人格与人性","star":false},{"id":207,"title":"习惯与人格","content":"如果一个人每天重复某种行为，最终形成了稳定的人格，那么他究竟是先有了选择，还是在不断重复中变成了自己？","cat":"心理、人格与人性","star":true},{"id":208,"title":"群体中的自我","content":"为什么一个人在独处时坚持的原则，进入群体后可能完全改变？群体究竟放大了真实的自我，还是制造了另一个自我？","cat":"心理、人格与人性","star":false},{"id":209,"title":"心理防御","content":"如果一个人通过遗忘、冷漠和降低期待来避免再次受伤，那么这种保护机制是在帮助他生存，还是让他逐渐失去感受生活的能力？","cat":"心理、人格与人性","star":true},{"id":210,"title":"人性的极限","content":"如果一个人长期处于极端压力之下，最终做出了自己曾经最鄙视的事情，那么我们应该认为他暴露了真实本性，还是被环境改变了？","cat":"心理、人格与人性","star":false},{"id":211,"title":"教育与独立思考","content":"如果教育的目标是培养独立思考的人，但教育内容、评价标准和答案都由社会预先制定，那么教育是否可能在培养服从的同时宣称培养自由？","cat":"教育、知识与成长","star":true},{"id":212,"title":"天赋与努力","content":"如果一个天赋平庸的人付出一生努力，仍然无法达到天才轻易达到的高度，那么社会应该如何评价他的努力与成就？","cat":"教育、知识与成长","star":false},{"id":213,"title":"错误的教育","content":"如果一个孩子在错误的教育体系中成长，却因此获得了幸福稳定的人生，那么我们还有必要告诉他自己曾经受到错误教育吗？","cat":"教育、知识与成长","star":true},{"id":214,"title":"知识与智慧","content":"一个人拥有海量知识，却无法判断如何正确使用它；另一个人知识有限，却拥有良好的判断力，谁更接近智慧？","cat":"教育、知识与成长","star":false},{"id":215,"title":"标准答案","content":"如果考试能够准确评价一个人的知识，却无法评价他的创造力、判断力和独立思考，那么社会是否正在奖励容易测量的能力，而忽视真正重要的能力？","cat":"教育、知识与成长","star":true},{"id":216,"title":"学习的目的","content":"如果一个人学习只是为了考试、学历和收入，而不是为了理解世界，那么他获得的知识是否仍然具有教育意义？","cat":"教育、知识与成长","star":false},{"id":217,"title":"童年与塑造","content":"如果一个人的童年经历决定了他成年后的大部分性格与选择，那么成年人究竟应该为自己的人生负责，还是应该追究塑造自己的人和环境？","cat":"教育、知识与成长","star":true},{"id":218,"title":"无知与幸福","content":"如果一个人因为缺乏知识而避免了许多烦恼，那么追求知识是否一定会让人生活得更好？","cat":"教育、知识与成长","star":false},{"id":219,"title":"教师的权力","content":"如果教师能够决定学生接触什么知识、接受什么评价以及相信什么价值观，那么教育者是否应该承担比普通人更高的道德责任？","cat":"教育、知识与成长","star":true},{"id":220,"title":"终身学习","content":"如果一个人一生都在学习，却始终没有时间真正实践所学，那么学习究竟是在丰富人生，还是成为另一种逃避行动的方式？","cat":"教育、知识与成长","star":false},{"id":221,"title":"财富的正当性","content":"如果一个人通过完全合法的方式获得巨额财富，但这种财富的积累建立在大量低收入劳动者的长期付出之上，那么他的财富是否完全正当？","cat":"经济、劳动与资源分配","star":true},{"id":222,"title":"贫穷与责任","content":"如果一个人贫穷是因为缺乏机会，而另一个人贫穷是因为长期拒绝努力，社会是否应该给予两者同等程度的帮助？","cat":"经济、劳动与资源分配","star":false},{"id":223,"title":"财富继承","content":"如果一个人出生时就继承了足以生活数代的财富，而另一个人必须从零开始，那么财富继承是否天然违背公平竞争？","cat":"经济、劳动与资源分配","star":true},{"id":224,"title":"劳动价值","content":"如果未来机器能够完成所有生产活动，而人类不再需要劳动，那么劳动是否仍然是衡量一个人社会价值的重要标准？","cat":"经济、劳动与资源分配","star":false},{"id":225,"title":"无用职业","content":"如果某种职业无法创造明显的经济价值，却能够给人们带来情感慰藉、文化传承和精神满足，那么社会是否应该保护它？","cat":"经济、劳动与资源分配","star":true},{"id":226,"title":"资源分配","content":"如果一种稀缺资源可以让富裕者获得更好的生活，也可以让贫困者避免死亡，那么资源应该根据支付能力分配，还是根据实际需要分配？","cat":"经济、劳动与资源分配","star":false},{"id":227,"title":"竞争与合作","content":"如果竞争能够提高整体效率，却必然制造输家，那么一个社会应该追求最大效率，还是尽可能减少竞争造成的伤害？","cat":"经济、劳动与资源分配","star":true},{"id":228,"title":"消费与身份","content":"如果一个人的社会地位主要通过消费能力体现，那么他是在使用财富改善生活，还是在通过消费购买身份认同？","cat":"经济、劳动与资源分配","star":false},{"id":229,"title":"自愿与剥削","content":"如果一个劳动者明知道工作条件恶劣，却因为没有其他选择而自愿接受工作，那么这种劳动关系是否仍然属于自愿交易？","cat":"经济、劳动与资源分配","star":false},{"id":230,"title":"经济增长的边界","content":"如果经济持续增长会不断消耗自然资源，而停止增长又可能引发失业和社会动荡，那么人类是否需要重新定义经济发展的目标？","cat":"经济、劳动与资源分配","star":true},{"id":231,"title":"文化与真实性","content":"如果一种传统文化为了适应现代社会而不断改变，那么它是在延续生命，还是逐渐失去原本的意义？","cat":"文化、艺术与社会价值","star":true},{"id":232,"title":"艺术与市场","content":"如果一件作品没有任何市场价值，却能够深刻改变一个人的思想，那么它是否比昂贵的艺术品更有价值？","cat":"文化、艺术与社会价值","star":false},{"id":233,"title":"大众审美","content":"如果大多数人喜欢的作品越来越相似，那么这是人类审美逐渐形成共识，还是商业市场正在压缩审美多样性？","cat":"文化、艺术与社会价值","star":true},{"id":234,"title":"文化挪用","content":"如果一个人使用其他文化的服饰、音乐和艺术形式进行创作，他是在表达尊重与欣赏，还是在未经允许地占有他人的文化？","cat":"文化、艺术与社会价值","star":false},{"id":235,"title":"传统与进步","content":"如果一项传统能够维持社会稳定，却限制个人自由，那么应该保留传统，还是为了进步而主动放弃它？","cat":"文化、艺术与社会价值","star":false},{"id":236,"title":"文化消失","content":"如果一种语言只剩下最后一个会说它的人，那么当这个人去世时，消失的究竟只是一种交流工具，还是一个独特的世界观？","cat":"文化、艺术与社会价值","star":true},{"id":237,"title":"艺术家的责任","content":"如果一位艺术家的作品能够影响大量年轻人，但作品传递的价值观可能造成负面影响，那么艺术家是否应该为观众的理解与行为负责？","cat":"文化、艺术与社会价值","star":false},{"id":238,"title":"娱乐与逃避","content":"如果一个社会的大多数人都通过娱乐逃避现实问题，而且这种娱乐并没有直接伤害任何人，那么社会是否有理由批评这种生活方式？","cat":"文化、艺术与社会价值","star":false},{"id":239,"title":"经典与时代","content":"如果一部作品在创作时具有进步意义，但在现代看来包含明显的偏见和歧视，那么它还应该被视为经典吗？","cat":"文化、艺术与社会价值","star":true},{"id":240,"title":"创作与模仿","content":"如果一个创作者通过模仿前人的作品逐渐形成自己的风格，那么原创究竟从哪一刻开始？模仿与创造之间是否存在清晰边界？","cat":"文化、艺术与社会价值","star":false},{"id":241,"title":"正义战争","content":"如果一场战争是为了阻止更大规模的屠杀而发动的，那么战争造成的死亡是否能够被视为必要代价？","cat":"战争、暴力与国际关系","star":true},{"id":242,"title":"战争中的平民","content":"如果攻击军事目标必然导致大量平民伤亡，那么发动攻击的一方是否仍然可以声称自己只是在打击敌方军事力量？","cat":"战争、暴力与国际关系","star":false},{"id":243,"title":"战败者的正义","content":"如果一方在战争中失败，但其最初的诉求确实是正当的，那么失败是否会改变它在道德上的地位？","cat":"战争、暴力与国际关系","star":true},{"id":244,"title":"士兵与命令","content":"如果士兵知道上级命令不正当，却因为拒绝执行就会被处决，他是否应该服从？","cat":"战争、暴力与国际关系","star":false},{"id":245,"title":"战争与仇恨","content":"如果一个国家的人民长期受到另一个国家的侵略，那么下一代是否有理由继承上一代的仇恨？","cat":"战争、暴力与国际关系","star":false},{"id":246,"title":"和平的代价","content":"如果为了结束战争，必须让侵略者保留部分利益，受害者是否应该接受这种和平？","cat":"战争、暴力与国际关系","star":true},{"id":247,"title":"核威慑","content":"如果两个国家都拥有足以毁灭对方的核武器，正是这种相互毁灭的可能性阻止了战争，那么恐惧是否反而成为和平的基础？","cat":"战争、暴力与国际关系","star":false},{"id":248,"title":"人道主义干预","content":"如果一个国家内部发生严重的人权灾难，其他国家是否有权以保护人民为理由进行军事干预？","cat":"战争、暴力与国际关系","star":false},{"id":249,"title":"战争记忆","content":"如果一个国家为了实现长期和平，要求人民逐渐遗忘过去的战争仇恨，那么这种遗忘是在促进和解，还是在抹除受害者的经历？","cat":"战争、暴力与国际关系","star":true},{"id":250,"title":"永久和平","content":"如果人类最终建立了全球统一政府，消除了国家之间的战争，那么新的权力中心是否可能成为比过去国家冲突更危险的存在？","cat":"战争、暴力与国际关系","star":false},{"id":251,"title":"数字人格","content":"如果一个人去世后，他的社交账号、聊天记录和AI数字分身仍然能够持续活动，那么这些数字人格应该由谁管理？","cat":"科技、隐私与数字社会","star":true},{"id":252,"title":"数据所有权","content":"如果一家企业通过用户每天的行为数据预测其未来选择，那么这些数据究竟属于用户，还是属于收集和分析数据的企业？","cat":"科技、隐私与数字社会","star":false},{"id":253,"title":"算法歧视","content":"如果一个算法能够比人类更准确地筛选人才，却因为训练数据继承了过去的社会偏见而歧视某些群体，那么我们应该相信算法的效率，还是拒绝它的判断？","cat":"科技、隐私与数字社会","star":true},{"id":254,"title":"技术依赖","content":"如果人类把记忆、导航、计算和决策都交给机器，那么当技术突然失效时，人类是否会失去独立生活的能力？","cat":"科技、隐私与数字社会","star":false},{"id":255,"title":"永久记录","content":"如果未来所有人的行为都能被永久记录，那么一个人是否还拥有重新开始、改变自己和摆脱过去的权利？","cat":"科技、隐私与数字社会","star":false},{"id":256,"title":"数字遗产","content":"如果一个人去世后，家属希望删除他的全部数字记录，而他的朋友希望保存这些记录作为纪念，那么谁有权决定？","cat":"科技、隐私与数字社会","star":true},{"id":257,"title":"技术垄断","content":"如果某项技术能够改善全人类生活，但只有少数企业或国家掌握它，那么技术是否应该成为公共资源？","cat":"科技、隐私与数字社会","star":false},{"id":258,"title":"机器决策","content":"如果自动驾驶系统必须在事故发生前选择保护车内乘客还是道路上的行人，那么谁有资格决定它的道德原则？","cat":"科技、隐私与数字社会","star":false},{"id":259,"title":"人类增强","content":"如果未来只有经过基因改造或脑机增强的人才能在社会竞争中获得优势，那么拒绝增强的人是否会逐渐失去平等权利？","cat":"科技、隐私与数字社会","star":true},{"id":260,"title":"技术的不可逆性","content":"如果一种技术一旦普及就无法彻底收回，即使后来发现它存在严重风险，人类是否应该在技术成熟之前主动限制它？","cat":"科技、隐私与数字社会","star":false},{"id":261,"title":"人类中心主义","content":"如果地球上所有生命都具有自身的生存价值，那么人类是否有资格把其他物种的存在完全建立在自身利益之上？","cat":"生态、动物与地球伦理","star":true},{"id":262,"title":"保护与发展","content":"如果一个地区必须砍伐森林才能让当地居民摆脱贫困，那么环境保护与人的生存需求应该如何平衡？","cat":"生态、动物与地球伦理","star":false},{"id":263,"title":"灭绝物种","content":"如果一种濒危动物会威胁当地居民的生命安全，那么人类是否应该优先保护动物，还是优先保护居民？","cat":"生态、动物与地球伦理","star":true},{"id":264,"title":"动物实验","content":"如果通过伤害少量动物能够研发出拯救大量人类生命的药物，那么这种实验是否正当？","cat":"生态、动物与地球伦理","star":false},{"id":265,"title":"人工生态","content":"如果人类能够创造完全人工化的生态系统，并让所有物种在其中稳定生存，那么自然生态是否还具有独立于生命延续之外的价值？","cat":"生态、动物与地球伦理","star":false},{"id":266,"title":"未来生态债务","content":"如果当代人通过消耗不可再生资源获得繁荣，而环境代价要由几百年后的世代承担，那么这种发展是否构成对未来人的剥削？","cat":"生态、动物与地球伦理","star":true},{"id":267,"title":"物种选择","content":"如果一种外来物种入侵并破坏当地生态，人类是否有权大规模消灭它？物种本身是否应该为自己的扩散承担责任？","cat":"生态、动物与地球伦理","star":false},{"id":268,"title":"自然灾害与救援","content":"如果一场自然灾害同时威胁人类和其他动物，而救援资源有限，人类是否应该永远优先救助自己的物种？","cat":"生态、动物与地球伦理","star":false},{"id":269,"title":"地球与文明","content":"如果人类能够移居其他星球，但离开地球意味着放弃原有生态环境和文化根源，那么人类是否应该把地球视为必须守护的家园？","cat":"生态、动物与地球伦理","star":true},{"id":270,"title":"自然的权利","content":"如果一条河流、一片森林或一座山能够获得法律上的权利，那么自然是否应该拥有独立于人类的法律地位？","cat":"生态、动物与地球伦理","star":false},{"id":271,"title":"司法错误","content":"如果一个人被法院判定有罪，服刑多年后才发现真正的凶手另有其人，那么国家应该如何补偿他失去的人生？","cat":"法律、制度与公共治理","star":true},{"id":272,"title":"法律与道德冲突","content":"如果一项法律符合程序，却明显违背普通人的道德直觉，那么公民是否有义务遵守它？","cat":"法律、制度与公共治理","star":false},{"id":273,"title":"监狱的目的","content":"监狱究竟应该以惩罚罪犯为目标，还是以改造罪犯、保护社会和帮助其重新融入社会为目标？","cat":"法律、制度与公共治理","star":false},{"id":274,"title":"终身惩罚","content":"如果一个人年轻时犯下严重罪行，几十年后已经彻底改变，社会是否仍然应该让他终身承担过去的身份？","cat":"法律、制度与公共治理","star":true},{"id":275,"title":"法律与科技","content":"如果法律无法及时跟上科技发展，而新技术又已经改变了人类的生活方式，那么应该先限制技术，还是先允许社会实践再逐渐立法？","cat":"法律、制度与公共治理","star":false},{"id":276,"title":"公共利益","content":"如果政府为了修建公共设施，必须强制征收少数人的私人财产，那么公共利益是否天然高于个人权利？","cat":"法律、制度与公共治理","star":false},{"id":277,"title":"紧急状态","content":"如果一场严重危机要求政府暂时集中权力，那么危机结束后，如何确保这些权力真正归还给社会？","cat":"法律、制度与公共治理","star":true},{"id":278,"title":"透明与效率","content":"如果公开政府所有决策过程会降低行政效率，但不公开又容易产生腐败，那么政府应该如何平衡透明度与效率？","cat":"法律、制度与公共治理","star":false},{"id":279,"title":"公平与程序","content":"如果一套程序严格公平，却最终产生明显不合理的结果，那么应该坚持程序，还是允许人为干预？","cat":"法律、制度与公共治理","star":false},{"id":280,"title":"权力的自我限制","content":"如果一个拥有巨大权力的人主动制定规则限制自己，但他同时拥有修改这些规则的权力，那么这种自我约束是否可靠？","cat":"法律、制度与公共治理","star":true},{"id":281,"title":"历史人物评价","content":"如果一个历史人物既推动了社会进步，又造成了大量无辜者的死亡，那么评价他时是否应该允许功绩与罪行同时存在，而不进行简单的善恶归类？","cat":"历史、记忆与文明传承","star":true},{"id":282,"title":"文明断层","content":"如果一个文明突然失去文字、科技和历史记录，后代是否仍然能够继承前代文明的身份？","cat":"历史、记忆与文明传承","star":false},{"id":283,"title":"历史遗产","content":"如果一座建筑是通过压迫和奴役建成的，但如今已经成为重要的文化遗产，那么社会应该保存它、拆除它，还是改变它的纪念方式？","cat":"历史、记忆与文明传承","star":true},{"id":284,"title":"历史与责任","content":"如果今天的人并未亲自参与过去的罪行，却仍然享受过去不公正制度留下的利益，那么他们是否需要承担某种补偿责任？","cat":"历史、记忆与文明传承","star":false},{"id":285,"title":"记忆与遗忘","content":"如果一个民族始终牢记过去的伤痛，就可能长期陷入仇恨；如果选择遗忘，又可能让历史悲剧重演。应该如何处理集体记忆？","cat":"历史、记忆与文明传承","star":false},{"id":286,"title":"文明竞争","content":"如果一个文明通过战争征服了其他文明，却在之后保存了被征服者的知识与文化，那么它究竟是毁灭了文明，还是以另一种方式延续了文明？","cat":"历史、记忆与文明传承","star":true},{"id":287,"title":"历史偶然性","content":"如果历史中的某个关键人物没有出生，整个文明就会走向完全不同的方向，那么历史究竟是由个人推动，还是由时代条件决定？","cat":"历史、记忆与文明传承","star":false},{"id":288,"title":"文明的继承","content":"如果一个新文明继承了旧文明的全部科技，却抛弃了旧文明的价值观，那么它是否仍然是旧文明的延续？","cat":"历史、记忆与文明传承","star":false},{"id":289,"title":"记忆的选择","content":"如果一个社会只能保存有限的历史资料，那么应该优先保存伟大成就、普通人的生活，还是那些曾经被社会遗忘的苦难？","cat":"历史、记忆与文明传承","star":true},{"id":290,"title":"文明的失败","content":"如果一个文明最终消失了，但它曾经建立过公平、自由与繁荣的社会，那么它的失败是否意味着它的理想也失败了？","cat":"历史、记忆与文明传承","star":false},{"id":291,"title":"没有观察者的宇宙","content":"如果人类和所有智慧生命都消失了，宇宙仍然继续运行，那么宇宙是否还存在所谓的价值？","cat":"存在、终极价值与未知","star":true},{"id":292,"title":"存在与必要性","content":"如果某个生命从未出生，也不会影响任何人的生活，那么他的出生与否是否具有可以被衡量的意义？","cat":"存在、终极价值与未知","star":false},{"id":293,"title":"完美世界的停滞","content":"如果一个世界已经实现所有人的需求，没有冲突、疾病、贫困和死亡，那么这个世界是否会因为缺少变化而逐渐失去活力？","cat":"存在、终极价值与未知","star":true},{"id":294,"title":"无意义的创造","content":"如果一个人明知道自己的创造最终会被时间摧毁，却依然愿意投入全部生命去完成它，那么这种行为是理性还是荒诞？","cat":"存在、终极价值与未知","star":false},{"id":295,"title":"无限可能的负担","content":"如果一个人拥有无限的生命与无限的可能性，却始终无法确定自己真正想要什么，那么无限自由是否反而会使他失去方向？","cat":"存在、终极价值与未知","star":true},{"id":296,"title":"终极知识","content":"如果人类最终发现，宇宙不存在任何目的，生命也没有被赋予任何意义，那么人类应该接受这一事实，还是继续创造自己的意义？","cat":"存在、终极价值与未知","star":false},{"id":297,"title":"超越人类的文明","content":"如果未来出现一种完全不需要情感、艺术、家庭和个人身份的高级文明，那么它是否比人类更加先进，还是只是发展出了另一种存在形式？","cat":"存在、终极价值与未知","star":true},{"id":298,"title":"生命与选择","content":"如果一个人可以选择出生，也可以选择永远不出生，那么尚未存在的他是否有能力作出真正属于自己的选择？","cat":"存在、终极价值与未知","star":false},{"id":299,"title":"世界是否值得拯救","content":"如果一个世界同时存在美好、痛苦、希望与绝望，而且这些事物永远无法彻底分离，那么拯救这个世界究竟意味着消除痛苦，还是接受它的不完美并继续生活？","cat":"存在、终极价值与未知","star":true},{"id":300,"title":"记忆、历史与集体身份","content":"如果一个国家的所有人都相信一段虚假的历史，这段历史是否会成为他们真实的集体身份？","cat":"存在、终极价值与未知","star":false},{"id":301,"title":"选择、后悔与人生可能性","content":"如果每一次选择都意味着放弃其他人生，那么一个人是否注定要为没有经历过的人生感到遗憾？","cat":"存在、终极价值与未知","star":false},{"id":302,"title":"最后的问题","content":"如果你有机会重新设计整个宇宙，能够修改生命、意识、时间、道德和幸福的全部规则，但必须放弃现在所珍视的一切，你会创造一个怎样的世界？又凭什么认为那个世界比现在更好？","cat":"存在、终极价值与未知","star":false}];
+const CATEGORIES = ["自我、意识与身份","现实、梦境、时间与宇宙","自由意志、命运与责任","伦理、善恶与正义","政治、社会与制度","生命、进化与科学","知识、语言、逻辑与认知","爱情、人际关系与他者","幸福、欲望、艺术与人生意义","文明、未来与终极选择","心理、人格与人性","教育、知识与成长","经济、劳动与资源分配","文化、艺术与社会价值","战争、暴力与国际关系","科技、隐私与数字社会","生态、动物与地球伦理","法律、制度与公共治理","历史、记忆与文明传承","存在、终极价值与未知"];
+const MAINLINES = [
+  {n:"自我究竟是什么",ids:[1,2,4,8,10,14,16,20]},
+  {n:"现实是否真实",ids:[21,22,23,24,27,28,35,36]},
+  {n:"自由是否存在",ids:[41,43,44,55,56,60]},
+  {n:"善意是否能证明正当",ids:[62,69,73,74,96,155,156]},
+  {n:"个体能否为集体牺牲",ids:[75,76,82,83,93,189,192]},
+  {n:"权力应该如何被限制",ids:[86,87,97,98,99,100,186]},
+  {n:"人类与AI的关系",ids:[14,56,110,132,182,183,184]},
+  {n:"爱与自主的冲突",ids:[141,144,146,154,155,156,159]},
+  {n:"幸福与意义",ids:[161,162,163,165,167,173,180,191]},
+  {n:"文明的终极价值",ids:[34,40,115,181,190,197,199,200]},
+  {n:"自我是否能够被修改",ids:[201,203,207,209,210]},
+  {n:"教育是否制造服从",ids:[211,213,215,217,219]},
+  {n:"财富与劳动是否公平",ids:[221,223,225,227,229,230]},
+  {n:"文化是否能够脱离市场",ids:[231,233,236,239,240]},
+  {n:"战争是否存在正当性",ids:[241,243,246,247,249,250]},
+  {n:"科技是否拥有边界",ids:[251,253,255,257,259,260]},
+  {n:"人类是否拥有自然的支配权",ids:[261,263,265,266,270]},
+  {n:"法律是否等于正义",ids:[271,272,274,277,279,280]},
+  {n:"文明是否能够继承与赎罪",ids:[281,283,284,285,289,290]},
+  {n:"世界是否值得被重新创造",ids:[291,293,294,295,297,299,300]}
+];
+const METHODS = [
+  {t:"条件替换",d:"改变一个关键条件，观察自己的答案是否发生变化。例如：原本是牺牲一个陌生人拯救十个人，现在把陌生人换成自己的亲人。"},
+  {t:"立场互换",d:"把自己从受益者换成受害者，从统治者换成被统治者，从多数人换成少数人。"},
+  {t:"规模扩大",d:"将一个人的问题扩大到一百万人、一个国家，甚至整个人类文明，检验原有原则是否依然成立。"},
+  {t:"时间延伸",d:"分别考虑短期、中期与长期后果。一个选择短期有效，不代表它长期正当。"},
+  {t:"反例检验",d:"主动寻找能够推翻自己观点的案例。如果一个原则只能在自己喜欢的案例中成立，它可能还不够稳固。"}
+];
+const PROMPTS = [
+  {k:"现象",v:"问题发生在什么情境？"},
+  {k:"核心矛盾",v:"真正冲突的两种价值是什么？"},
+  {k:"追问",v:"如果改变条件，答案会不会改变？"}
+];
+
+const store = (()=>{ try{ return JSON.parse(localStorage.getItem("think-v1")||'{"fav":{},"rec":{}}'); }catch(e){ return {fav:{},rec:{}}; } })();
+function save(){ try{ localStorage.setItem("think-v1", JSON.stringify(store)); }catch(e){} }
+function esc(s){ return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function qById(id){ return QUESTIONS.find(q=>q.id===id); }
+function catCount(c){ return QUESTIONS.filter(q=>q.cat===c).length; }
+function mainlineOf(id){ return MAINLINES.find(m=>m.ids.includes(id)) || null; }
+
+let state = { view:"home", cat:null, qid:null, q:"", onlyUn:false, onlyFav:false };
+
+function go(v){ state.view=v; if(v==="browse"&&!state.cat){}; render(); }
+function openQ(id){ state.view="detail"; state.qid=id; render(); }
+
+function render(){
+  document.querySelectorAll(".topnav button").forEach(b=>b.classList.toggle("active", b.dataset.v===state.view));
+  const app=document.getElementById("app");
+  if(state.view==="home") app.innerHTML=renderHome();
+  else if(state.view==="browse") app.innerHTML=renderBrowse();
+  else if(state.view==="detail") app.innerHTML=renderDetail();
+  else if(state.view==="archive") app.innerHTML=renderArchive();
+  else if(state.view==="methods") app.innerHTML=renderMethods();
+  bind();
+}
+
+/* ---------- HOME ---------- */
+function renderHome(){
+  const daily = QUESTIONS[dayOfYear()%QUESTIONS.length];
+  const thought = Object.keys(store.rec).length;
+  const fav = Object.keys(store.fav).length;
+  let h = '<p class="quote serif">「问题不一定需要答案，但每一次思考都值得留下痕迹。」</p>';
+  h += '<div class="statbar"><div class="stat"><div class="v">'+QUESTIONS.length+'</div><div class="l">道思想实验</div></div>'
+     + '<div class="stat"><div class="v">'+thought+'</div><div class="l">已记录观点</div></div>'
+     + '<div class="stat"><div class="v">'+fav+'</div><div class="l">已收藏</div></div></div>';
+  h += '<div class="card"><div style="font-size:12px;color:var(--muted);letter-spacing:1px">今日一题 · 第 '+daily.id+' 题</div>'
+     + '<div class="d-title" style="font-size:18px;margin:6px 0 8px">'+esc(daily.title)+(daily.star?' <span class="star">★</span>':'')+'</div>'
+     + '<div class="d-content" style="font-size:14.5px">'+esc(daily.content)+'</div>'
+     + '<div style="margin-top:12px"><button class="btn primary" data-open="'+daily.id+'">开始思考</button> '
+     + '<button class="btn ghost" data-rand>随机一道</button></div></div>';
+  h += '<div class="crumbs" style="margin-top:6px">按主题进入 · 共 20 个分类</div><div class="cat-grid">';
+  CATEGORIES.forEach((c,i)=>{
+    h += '<button class="cat-card'+(i>=10?' vol2':'')+'" data-cat="'+i+'"><div class="t">'+esc(c)+'</div><div class="c">'+catCount(c)+' 题</div></button>';
+  });
+  h += '</div>';
+  return h;
+}
+
+/* ---------- BROWSE ---------- */
+function renderBrowse(){
+  let list = QUESTIONS.slice();
+  if(state.cat) list = list.filter(q=>q.cat===state.cat);
+  if(state.q) { const s=state.q.toLowerCase(); list=list.filter(q=>(q.title+q.content+q.cat).toLowerCase().includes(s)); }
+  if(state.onlyUn) list=list.filter(q=>!(store.rec[q.id]&&store.rec[q.id].length));
+  if(state.onlyFav) list=list.filter(q=>store.fav[q.id]);
+  let h = '<div class="crumbs">题库'+(state.cat?' <b>· '+esc(state.cat)+'</b>':'')+' · '+list.length+' 题</div>';
+  h += '<div class="toolbar"><input id="search" placeholder="搜索题目或关键词…" value="'+esc(state.q)+'">';
+  h += '<button class="btn" data-rand>🎲 随机</button></div>';
+  h += '<div class="toolbar">';
+  h += '<button class="chip'+(state.cat===null?' active':'')+'" data-all>全部</button>';
+  CATEGORIES.forEach((c,i)=>{ if(state.cat===c) h += '<button class="chip active">'+esc(c)+' ✕</button>'; });
+  h += '<button class="chip'+(state.onlyUn?' active':'')+'" data-un>只看未思考</button>';
+  h += '<button class="chip'+(state.onlyFav?' active':'')+'" data-fav>只看收藏</button>';
+  h += '</div>';
+  // category quick filter
+  h += '<div class="toolbar" style="margin-top:-4px">';
+  CATEGORIES.forEach((c,i)=>{ h += '<button class="chip'+(state.cat===c?' active':'')+'" data-cat="'+i+'">'+esc(c)+'</button>'; });
+  h += '</div>';
+  if(!list.length) h += '<div class="empty">没有符合条件的题目</div>';
+  h += list.map(q=>{
+    const done = store.rec[q.id] && store.rec[q.id].length;
+    const fav = store.fav[q.id];
+    return '<button class="q-item" data-open="'+q.id+'"><div class="q-no">'+q.id+'</div><div><div class="qt">'+esc(q.title)+(q.star?' <span class="star">★</span>':'')+'</div>'
+      +'<div class="qc">'+esc(q.cat)+(done?' · 已思考':'')+(fav?' · ★收藏':'')+'</div></div></button>';
+  }).join('');
+  return h;
+}
+
+/* ---------- DETAIL ---------- */
+function renderDetail(){
+  const q = qById(state.qid);
+  if(!q) return '<div class="empty">题目不存在</div>';
+  const ml = mainlineOf(q.id);
+  const recs = store.rec[q.id] || [];
+  const fav = !!store.fav[q.id];
+  let h = '<a class="back" data-back>‹ 返回题库</a>';
+  h += '<div class="card detail-head"><span class="badge">'+esc(q.cat)+'</span><span class="badge" style="color:var(--muted);border-color:var(--line)">第 '+q.id+' 题</span>'+(q.star?'<span class="star-badge">★ 重点</span>':'');
+  h += '<div class="d-title">'+esc(q.title)+'</div><div class="d-content">'+esc(q.content)+'</div>';
+  h += '<div style="margin-top:12px"><button class="btn '+(fav?'gold':'ghost')+'" data-fav>'+ (fav?'★ 已收藏':'☆ 收藏') +'</button></div></div>';
+  h += '<div class="card"><div style="font-size:12px;color:var(--accent2);letter-spacing:1px;margin-bottom:8px">深入思考 · 三个入口</div>';
+  PROMPTS.forEach(p=>{ h += '<div class="prompt-box"><div class="k">'+p.k+'</div><div class="v">'+p.v+'</div></div>'; });
+  h += '</div>';
+  // record form
+  h += '<div class="card"><div style="font-size:12px;color:var(--accent2);letter-spacing:1px;margin-bottom:10px">我的观点 · 记录一次新的思考</div>';
+  h += '<div class="field"><label>暂时立场</label><textarea id="f-pos" rows="2" placeholder="目前倾向什么判断？"></textarea></div>';
+  h += '<div class="field"><label>理由与论证</label><textarea id="f-rea" rows="3" placeholder="为什么这样想？"></textarea></div>';
+  h += '<div class="field"><label>反方观点</label><textarea id="f-opp" rows="2" placeholder="什么证据或论证可能推翻自己的立场？"></textarea></div>';
+  h += '<div class="field"><label>暂时无法解决的疑问</label><textarea id="f-uns" rows="2" placeholder="留白：还没想清楚的部分"></textarea></div>';
+  h += '<button class="btn primary" data-save>保存这条思考</button>';
+  h += '<div style="font-size:12px;color:var(--muted);margin-top:8px">每次保存都会留下一个带时间的版本，供「时间检验」：过一段时间回来看，是否还认同当初的判断。</div></div>';
+  // history
+  if(recs.length){
+    h += '<div class="card"><div style="font-size:12px;color:var(--accent2);letter-spacing:1px;margin-bottom:10px">思想记录 · 共 '+recs.length+' 个版本</div>';
+    [...recs].reverse().forEach(r=>{
+      h += '<div class="ver"><div class="ts">'+esc(fmtTs(r.ts))+'</div>';
+      if(r.pos) h += '<div class="row"><b>立场</b>：'+esc(r.pos)+'</div>';
+      if(r.rea) h += '<div class="row"><b>理由</b>：'+esc(r.rea)+'</div>';
+      if(r.opp) h += '<div class="row"><b>反方</b>：'+esc(r.opp)+'</div>';
+      if(r.uns) h += '<div class="row"><b>疑问</b>：'+esc(r.uns)+'</div>';
+      h += '</div>';
+    });
+    h += '</div>';
+  }
+  // related
+  if(ml){
+    const rel = ml.ids.filter(i=>i!==q.id).map(i=>qById(i)).filter(Boolean);
+    if(rel.length){
+      h += '<div class="card"><div style="font-size:12px;color:var(--accent2);letter-spacing:1px;margin-bottom:8px">关联追问 · '+esc(ml.n)+'</div>';
+      rel.forEach(r=>{ h += '<button class="rel-item" data-open="'+r.id+'">'+r.id+' · '+esc(r.title)+'</button>'; });
+      h += '</div>';
+    }
+  }
+  return h;
+}
+
+/* ---------- ARCHIVE ---------- */
+function renderArchive(){
+  const recIds = Object.keys(store.rec).filter(id=>store.rec[id]&&store.rec[id].length).map(Number);
+  const favIds = Object.keys(store.fav).map(Number).filter(id=>store.fav[id]);
+  let h = '<div class="crumbs">我的思想档案</div>';
+  h += '<div class="statbar"><div class="stat"><div class="v">'+recIds.length+'</div><div class="l">思考过的题</div></div>'
+     + '<div class="stat"><div class="v">'+favIds.length+'</div><div class="l">收藏</div></div>'
+     + '<div class="stat"><div class="v">'+recIds.reduce((s,id)=>s+(store.rec[id]||[]).length,0)+'</div><div class="l">观点版本</div></div></div>';
+  if(!recIds.length && !favIds.length){
+    h += '<div class="empty">还没有记录。<br>去「题库」选一道题，写下你的第一个立场。</div>';
+    return h;
+  }
+  if(favIds.length){
+    h += '<div class="arch-sub">★ 我的收藏</div>';
+    h += favIds.map(id=>{const q=qById(id); return q?'<button class="q-item" data-open="'+id+'"><div class="q-no">'+id+'</div><div><div class="qt">'+esc(q.title)+'</div><div class="qc">'+esc(q.cat)+'</div></div></button>':'';}).join('');
+  }
+  if(recIds.length){
+    h += '<div class="arch-sub">思考过的问题（含立场变化）</div>';
+    h += recIds.map(id=>{
+      const q=qById(id); if(!q) return '';
+      const rs=store.rec[id]; const n=rs.length;
+      return '<button class="q-item" data-open="'+id+'"><div class="q-no">'+id+'</div><div><div class="qt">'+esc(q.title)+'</div>'
+        +'<div class="qc">'+esc(q.cat)+' · '+n+' 个版本'+(n>1?' · 立场有变化':"")+'</div></div></button>';
+    }).join('');
+  }
+  // 主题分布
+  h += '<div class="arch-sub">我的思考 · 主题分布</div><div class="card">';
+  CATEGORIES.forEach(c=>{
+    const cnt = recIds.filter(id=>{const q=qById(id);return q&&q.cat===c;}).length;
+    if(cnt>0) h += '<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px"><span>'+esc(c)+'</span><b style="color:var(--accent)">'+cnt+'</b></div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+/* ---------- METHODS ---------- */
+function renderMethods(){
+  let h = '<p class="quote serif">「你曾经为什么这样想，后来又因为什么改变。」</p><div class="card">';
+  h += '<div style="font-size:12px;color:var(--accent2);letter-spacing:1px;margin-bottom:12px">讨论时的五种检验方法</div>';
+  METHODS.forEach(m=>{ h += '<div class="m-item"><div class="t">'+esc(m.t)+'</div><div class="d">'+esc(m.d)+'</div></div>'; });
+  h += '</div>';
+  h += '<div class="card"><div style="font-size:12px;color:var(--accent2);letter-spacing:1px;margin-bottom:10px">建议的记录格式</div>';
+  const fmt=["现象：问题发生在什么情境？","核心矛盾：真正冲突的两种价值是什么？","追问：如果改变条件，答案会不会改变？","暂时立场：目前倾向什么判断？理由是什么？","反方观点：什么证据或论证可能推翻自己的立场？","时间检验：过一段时间后，是否仍然认同原来的答案？"];
+  fmt.forEach(f=>{ h += '<div class="prompt-box"><div class="v" style="color:var(--ink)">'+esc(f)+'</div></div>'; });
+  h += '</div>';
+  return h;
+}
+
+/* ---------- helpers ---------- */
+function dayOfYear(){ const n=new Date(); const s=new Date(n.getFullYear(),0,0); return Math.floor((n-s)/86400000); }
+function fmtTs(ts){ const d=new Date(ts); const p=x=>String(x).padStart(2,"0"); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())+" "+p(d.getHours())+":"+p(d.getMinutes()); }
+function randOpen(){ const list = QUESTIONS; const q = list[Math.floor(Math.random()*list.length)]; openQ(q.id); }
+
+/* ---------- bind events ---------- */
+function bind(){
+  const app=document.getElementById("app");
+  app.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openQ(+b.dataset.open));
+  app.querySelectorAll("[data-rand]").forEach(b=>b.onclick=randOpen);
+  app.querySelectorAll("[data-back]").forEach(b=>b.onclick=()=>{state.view="browse";render();});
+  app.querySelectorAll("[data-cat]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.cat; state.cat = (state.cat===CATEGORIES[i]? null : CATEGORIES[i]); state.view="browse"; render(); });
+  app.querySelectorAll("[data-all]").forEach(b=>b.onclick=()=>{ state.cat=null; render(); });
+  app.querySelectorAll("[data-un]").forEach(b=>b.onclick=()=>{ state.onlyUn=!state.onlyUn; render(); });
+  app.querySelectorAll("[data-fav]").forEach(b=>{
+    if(state.view==="browse"){ b.onclick=()=>{ state.onlyFav=!state.onlyFav; render(); }; }
+    else { b.onclick=()=>{ const id=state.qid; if(store.fav[id]) delete store.fav[id]; else store.fav[id]=1; save(); render(); }; }
+  });
+  const s=document.getElementById("search");
+  if(s){ s.oninput=()=>{ state.q=s.value; }; s.onchange=()=>render(); s.onkeydown=e=>{ if(e.key==="Enter") render(); }; }
+  const saveBtn=app.querySelector("[data-save]");
+  if(saveBtn) saveBtn.onclick=()=>{
+    const id=state.qid;
+    const rec={ ts:Date.now(), pos:val("f-pos"), rea:val("f-rea"), opp:val("f-opp"), uns:val("f-uns") };
+    if(!rec.pos && !rec.rea && !rec.opp && !rec.uns){ alert("先写点内容再保存"); return; }
+    (store.rec[id]=store.rec[id]||[]).push(rec); save(); render();
+  };
+}
+function val(id){ const e=document.getElementById(id); return e?e.value.trim():""; }
+
+document.querySelectorAll(".topnav button").forEach(b=>b.onclick=()=>go(b.dataset.v));
+render();
+</script>
+</body>
+</html>
